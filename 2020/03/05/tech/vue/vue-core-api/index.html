@@ -195,7 +195,7 @@
 
 </li>
 </ul>
-<h4 id="2-Vue-的生命周期方法"><a href="#2-Vue-的生命周期方法" class="headerlink" title="2. Vue 的生命周期方法"></a>2. Vue 的生命周期方法</h4><p><img src="/.com//lifecycle.png" alt="vue-lifecycle"></p>
+<h4 id="2-Vue-的生命周期方法"><a href="#2-Vue-的生命周期方法" class="headerlink" title="2. Vue 的生命周期方法"></a>2. Vue 的生命周期方法</h4><p><img src="/2020/03/05/tech/vue/vue-core-api/lifecycle.png" alt="vue-lifecycle"></p>
 <ul>
 <li><p><code>beforeCreate</code> 和 <code>created</code></p>
 <p>beforeCreate、created 方法在 new Vue(<code>options</code>) 的过程中一定会被执行，而且 beforeCreate、created 两个生命周期中都不能进行 dom 操作，因为这时 Vue 还没有生成最终的根节点，一般操作 dom 相关的动作，要放在 mounted 中。操作数据相关的动作一般放在 created 中，但不要放在 beforeCreate 中，因为 beforeCreate 还没有进行数据的 reactive 响应式相关的初始化</p>
