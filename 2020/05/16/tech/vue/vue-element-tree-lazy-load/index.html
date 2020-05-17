@@ -10,7 +10,7 @@
   
   <title>
     
-      互联网本质的一点讨论 | HenryV2进阶中…
+      ElementUI 树形组件懒加载 | HenryV2进阶中…
     
   </title>
   <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -129,8 +129,8 @@
 </header>
 
     <div id="article-banner">
-  <h2>互联网本质的一点讨论</h2>
-  <p class="post-date">2020-03-06</p>
+  <h2>ElementUI 树形组件懒加载</h2>
+  <p class="post-date">2020-05-16</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
   </div>
@@ -138,29 +138,45 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>今天 Jerry 请我吃麦当劳，顺便陪他去充电桩充电，路上一起讨论了互联网本质的一些东西，感觉 Jerry 总结的很有道理，我准备记录一下，希望以后自己也能对一些事物做出自己的判断</p>
-<p><strong>互联网本质讨论的三个结论</strong></p>
+    <section class="markdown-content"><p>总结一下在使用ElementUI <el-tree> 组件实现节点懒加载时遇到的问题和解决方法</el-tree></p>
+<p>最终大致效果截图：<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E6%95%B4%E4%BD%93%E6%95%88%E6%9E%9C%E9%A1%B5%E9%9D%A2.png" alt="整体效果页面"></p>
+<p>页面涉及到的页面展示和用户操作有：树形组件的节点<code>懒加载渲染</code>，在某个节点下<code>新增子层</code>、<code>新增房间</code>、<code>设置管理员</code>、<code>重命名</code>、<code>删除节点</code>，解析 URL 中的当前选中的节点 id，使<code>&lt;el-tree/&gt;</code>组件自动展开到该节点。</p>
+<h5 id="历史背景"><a href="#历史背景" class="headerlink" title="历史背景"></a>历史背景</h5><p>之前由于总总原因，区域树实现的程度是：后台返回所有区域的平层数据结构，数组元素间通过<code>pid</code>进行关联，前台拿到所有区域数据后，根据<code>pid</code>组装成<code>&lt;el-tree/&gt;</code>组件需要的节点递归结构，所以前台组好数据后以<code>:data=&quot;srcData&quot;</code>传入即可。当用户对节点进行增删改操作后，前台会重新请求新的数据，再将以上处理重新进行一遍，从而刷新整个区域树。</p>
+<h5 id="现有需求"><a href="#现有需求" class="headerlink" title="现有需求"></a>现有需求</h5><p>后台不再将所有的区域一次性返回给前台，而是用户在展开节点后，再以点击的节点的 <code>id</code> 作为父节点 <code>pid</code>，请求其子层中第一层的区域数据，然后前台将请求到的数据载入到该节点。并且对区域的增删改操作成功后，不再是重新请求所有的数据，而是根据 <code>id</code> 更新指定的某个节点。</p>
+<h5 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h5><ul>
+<li>懒加载</li>
+</ul>
+<p><code>&lt;el-tree&gt;</code> 组件其实本身就支持懒加载，用法也很简单：<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/el-tree%E6%87%92%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%B3%951.png" alt="el-tree懒加载用法1"></p>
+<p>初始化组件时，设置<code>:lazy=&quot;true&quot;</code>，并自定义<code>load</code>方法即可<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/el-tree%E6%87%92%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%B3%952.png" alt="el-tree懒加载用法2"></p>
+<hr>
 <ul>
-<li><p>客户：相对不是很富裕的人群</p>
+<li><p>对节点的增删改</p>
+<ul>
+<li><p>节点新增：<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E8%8A%82%E7%82%B9%E6%96%B0%E5%A2%9E1.png" alt="节点新增1"><br>在新增子层接返回成功后，将返回的 <code>resp.data</code> 通过<code>&lt;el-tree/&gt;</code>组件自带的<code>append</code>方法，将新数据追加在当前节点中<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E8%8A%82%E7%82%B9%E6%96%B0%E5%A2%9E2.png" alt="节点新增2"></p>
 </li>
-<li><p>服务：让相对高质量的服务廉价化</p>
+<li><p>与新增同理，节点删除：<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E8%8A%82%E7%82%B9%E5%88%A0%E9%99%A41.png" alt="节点删除1"><br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E8%8A%82%E7%82%B9%E5%88%A0%E9%99%A42.png" alt="节点删除2"></p>
 </li>
-<li><p>成本：用空间成本换时间成本</p>
+<li><p>节点更改：<br>在<code>&lt;el-tree/&gt;</code>组件的<code>node-click</code>事件回调中，前两个参数会返回该节点的数据源以及该节点对象本身：<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E8%8A%82%E7%82%B9%E6%9B%B4%E6%94%B91.png" alt="节点更改1"><br>其中对该节点的<code>Node()</code>对象的<code>data</code>进行操作，则页面会根据最新的数据源进行重新渲染（<strong>注：直接对 <code>nodeData</code>进行更改，不会触发页面的重新渲染</strong>）<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E8%8A%82%E7%82%B9%E6%9B%B4%E6%94%B92.png" alt="节点更改2"><br>所以当节点更改接口返回成功后，用返回的新数据更新<code>node.data</code>即可实现页面的动态刷新<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E8%8A%82%E7%82%B9%E6%9B%B4%E6%94%B93.png" alt="节点更改3"></p>
 </li>
 </ul>
-<p><strong>例子：互联网健身房和传统健身房的区别</strong></p>
-<p>传统健身房盈利主要靠的是前期会员加入的会员卡费，以及会员购买私教授课的费用，其中会员卡费一般是一次性付完，私教课则按照课时收费。而且相对私教课程，会员费要低很多，市面上普通健身房一年的会员卡费大概在1500-3000之间，而一节私教费就在300~700之间（和城市/地段有关）。而为什么私教课很贵，先不看私教老师本身的专业性、口碑等价值，有一个本质原因是：私教授课过程中，他的时间只能被一个或者少量的人所占用，其时间成本是很高的。而同时教授的人越多，每个人所分担的费用也会相对更少。</p>
-<p>另一方面，传统健身房的私教的主要收入也依赖于他所在健身房的客源，所以其价值在一定程度上是被限制的。而诸如超级猩猩这类互联网健身房，由互联网提供的平台，让更多的人不需要办健身房的会员卡，就能有机会接触到更多的优秀私教。相对的，私教也不会受限于他所在健身房的固定圈子，能有更多的机会授课。同时报名私教课的人所要分担的费用也会被平均下来，变得更低，而且也不用办长周期的会员卡绑定消费，所有他们要承担的风险变小，使得更多的人接受这种模式。</p>
-<p>互联网让原本相对高质量的私教健身服务，变得廉价，让原本没有太好经济基础的人也能享受到，即使这种模式下的健身私教服务相对于传统的一对一服务，会打折扣，但对于很多人来讲，这已经满足他们的需求了。而对于经济基础很好的人，比如一些明星，肯定就不会接受这种模式，他们追求的就是更专业，更高质量，长期且稳定的服务，对成本的顾虑不在他们考量的第一位。</p>
-<p><strong>最后希望自己慢慢变成一个有思想的人，哈哈</strong></p>
+</li>
+</ul>
+<hr>
+<ul>
+<li>自动展开到指定的节点</li>
+</ul>
+<p>首先从 URL 中取当前需要展开节点的全路径信息，用它更新<code>&lt;el-tree/&gt;</code>组件的<code>default-expanded-keys</code>属性，这样区域树就会展开至指定的节点<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E5%B1%95%E5%BC%80%E6%8C%87%E5%AE%9A%E8%8A%82%E7%82%B91.png" alt="展开指定节点1"><br><strong>此处需要设置全路径的原因是：在懒加载模式下<code>&lt;el-tree/&gt;</code>组件的<code>auto-expand-parent</code>是无效的</strong></p>
+<p>还存在一个问题是，我们不仅要展开需要默认展开的节点，还要给当前正在操作的节点赋值，即全路径中最后一个<code>id</code>所对应的节点。<code>&lt;el-tree/&gt;</code>组件提供了<code>setCurrentKey</code>方法，即根据传入的<code>key</code>,将该<code>key</code>所对应的节点设置为选中状态，我们刚好可以利用这个方法。但由于每一节点的数据是异步请求而来的，所以如果将该方法的调用放在上图的方法中，可能会造成节点数据还没加载好，就给组件设置了当前选中的节点，导致设置不成功<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E5%B1%95%E5%BC%80%E6%8C%87%E5%AE%9A%E8%8A%82%E7%82%B92.png" alt="展开指定节点2"></p>
+<p>解决这个问题的办法是，将<code>setCurrentKey</code>的调用放在自定义<code>load</code>方法的成功回调中：<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E5%B1%95%E5%BC%80%E6%8C%87%E5%AE%9A%E8%8A%82%E7%82%B93.png" alt="展开指定节点3"><br>这样就可以保证节点数据已经加载完成了，再去设置当前选中的节点</p>
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p>以上就是区域树组件改造过程中遇到的问题，以及一些解决思路。ElementUI作为最受欢迎的Vue组件库，它在提供丰富的既有功能的同时，也提供了很多可以灵活运用的API。本身自己能力有限，不能说别人造的轮子无法很好的满足自己的需求，就去想着改别人的源码，我们在自定义组件时，我们可以多尝试，在现有的基础上寻找最佳的方案来满足需求。</p>
 </section>
     <!-- Tags START -->
     
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#随想" >
-    <span class="tag-code">随想</span>
+  <a href="/tags#Vue" >
+    <span class="tag-code">Vue</span>
   </a>
 
       </div>
@@ -171,20 +187,13 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/2020/03/06/thinking/20200125/">
+      <a class="nav-left" href="/2020/03/06/thinking/20200306/">
         <span class="nav-arrow">← </span>
         
-          春节随想
+          互联网本质的一点讨论
         
       </a>
     
-    
-      <a class="nav-right" href="/2020/05/16/tech/vue/vue-element-tree-lazy-load/">
-        
-          ElementUI 树形组件懒加载
-        
-        <span class="nav-arrow"> →</span>
-      </a>
     
   </div>
 
@@ -206,7 +215,7 @@
   <div class="toc-main">
     <strong class="toc-title">Catalog</strong>
     
-      <ol class="nav">none</ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#历史背景"><span class="toc-nav-text">历史背景</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#现有需求"><span class="toc-nav-text">现有需求</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#解决办法"><span class="toc-nav-text">解决办法</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#总结"><span class="toc-nav-text">总结</span></a></li></ol>
     
   </div>
 </aside>
@@ -216,7 +225,7 @@
 
 <script>
   (function () {
-    var url = 'http://yoursite.com/2020/03/06/thinking/20200306/';
+    var url = 'http://yoursite.com/2020/05/16/tech/vue/vue-element-tree-lazy-load/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
