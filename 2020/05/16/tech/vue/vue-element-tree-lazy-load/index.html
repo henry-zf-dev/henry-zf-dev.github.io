@@ -168,6 +168,14 @@
 <p>首先从 URL 中取当前需要展开节点的全路径信息，用它更新<code>&lt;el-tree/&gt;</code>组件的<code>default-expanded-keys</code>属性，这样区域树就会展开至指定的节点<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E5%B1%95%E5%BC%80%E6%8C%87%E5%AE%9A%E8%8A%82%E7%82%B91.png" alt="展开指定节点1"><br><strong>此处需要设置全路径的原因是：在懒加载模式下<code>&lt;el-tree/&gt;</code>组件的<code>auto-expand-parent</code>是无效的</strong></p>
 <p>还存在一个问题是，我们不仅要展开需要默认展开的节点，还要给当前正在操作的节点赋值，即全路径中最后一个<code>id</code>所对应的节点。<code>&lt;el-tree/&gt;</code>组件提供了<code>setCurrentKey</code>方法，即根据传入的<code>key</code>,将该<code>key</code>所对应的节点设置为选中状态，我们刚好可以利用这个方法。但由于每一节点的数据是异步请求而来的，所以如果将该方法的调用放在上图的方法中，可能会造成节点数据还没加载好，就给组件设置了当前选中的节点，导致设置不成功<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E5%B1%95%E5%BC%80%E6%8C%87%E5%AE%9A%E8%8A%82%E7%82%B92.png" alt="展开指定节点2"></p>
 <p>解决这个问题的办法是，将<code>setCurrentKey</code>的调用放在自定义<code>load</code>方法的成功回调中：<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E5%B1%95%E5%BC%80%E6%8C%87%E5%AE%9A%E8%8A%82%E7%82%B93.png" alt="展开指定节点3"><br>这样就可以保证节点数据已经加载完成了，再去设置当前选中的节点</p>
+<hr>
+<ul>
+<li>补充：<code>&lt;el-tree/&gt;</code>组件的全选/半选问题</li>
+</ul>
+<p>在角色管理中，给某个角色设置其拥有的权限项，使用到了<code>&lt;el-tree/&gt;</code>组件的选择功能：<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/el-tree%E5%85%A8%E9%80%89%E5%8D%8A%E9%80%891.png" alt="el-tree全选办选1"><br>但是遇到一个问题：当前台把已选的权限项提交给后台保存成功后，需要在查询该角色的权限项时，将权限项设置给<code>&lt;el-tree/&gt;</code>组件进行显示，但是前台是需要将所有选择的节点(不管是全选还是办选)的 id 都提交到后台，所以前台拿到的新数据也是全量的，而且无法区分是全选还是半选。这样会造成，只要提交时父节点被选择（不论全选/半选），在给组件设置选中值时，它的子节点会全被选中</p>
+<p>解决办法是：</p>
+<p>在组件<code>mounted</code>后，手动设置<code>&lt;el-tree/&gt;</code>组件的选中值，首先遍历<code>selectData</code>，通过<code>getNode</code>方法拿到所有需要选中的节点对象，然后判断其是否为叶子节点，如果是，则使用<code>setChecked</code>方法将其状态设置为选中；而非叶子节点会自动根据其所有叶子节点的选中状态，决定其本身的全选或半选状态<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/el-tree%E5%85%A8%E9%80%89%E5%8D%8A%E9%80%892.png" alt="el-tree全选办选2"></p>
+<hr>
 <h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p>以上就是区域树组件改造过程中遇到的问题，以及一些解决思路。ElementUI作为最受欢迎的Vue组件库，它在提供丰富的既有功能的同时，也提供了很多可以灵活运用的API。本身自己能力有限，不能说别人造的轮子无法很好的满足自己的需求，就去想着改别人的源码，我们在自定义组件时，可以多进行尝试，在现有的基础上寻找最佳的方案来满足需求。</p>
 </section>
     <!-- Tags START -->
