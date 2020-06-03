@@ -146,7 +146,7 @@
 <h5 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h5><ul>
 <li>懒加载</li>
 </ul>
-<p><code>&lt;el-tree&gt;</code> 组件其实本身就支持懒加载，用法也很简单：<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/el-tree%E6%87%92%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%B3%951.png" alt="el-tree懒加载用法1"></p>
+<p><code>&lt;el-tree/&gt;</code> 组件其实本身就支持懒加载，用法也很简单：<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/el-tree%E6%87%92%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%B3%951.png" alt="el-tree懒加载用法1"></p>
 <p>初始化组件时，设置<code>:lazy=&quot;true&quot;</code>，并自定义<code>load</code>方法即可<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/el-tree%E6%87%92%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%B3%952.png" alt="el-tree懒加载用法2"></p>
 <hr>
 <ul>
@@ -166,8 +166,9 @@
 <li>自动展开到指定的节点</li>
 </ul>
 <p>首先从 URL 中取当前需要展开节点的全路径信息，用它更新<code>&lt;el-tree/&gt;</code>组件的<code>default-expanded-keys</code>属性，这样区域树就会展开至指定的节点<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E5%B1%95%E5%BC%80%E6%8C%87%E5%AE%9A%E8%8A%82%E7%82%B91.png" alt="展开指定节点1"><br><strong>此处需要设置全路径的原因是：在懒加载模式下<code>&lt;el-tree/&gt;</code>组件的<code>auto-expand-parent</code>是无效的</strong></p>
-<p>还存在一个问题是，我们不仅要展开需要默认展开的节点，还要给当前正在操作的节点赋值，即全路径中最后一个<code>id</code>所对应的节点。<code>&lt;el-tree/&gt;</code>组件提供了<code>setCurrentKey</code>方法，即根据传入的<code>key</code>,将该<code>key</code>所对应的节点设置为选中状态，我们刚好可以利用这个方法。但由于每一节点的数据是异步请求而来的，所以如果将该方法的调用放在上图的方法中，可能会造成节点数据还没加载好，就给组件设置了当前选中的节点，导致设置不成功<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E5%B1%95%E5%BC%80%E6%8C%87%E5%AE%9A%E8%8A%82%E7%82%B92.png" alt="展开指定节点2"></p>
-<p>解决这个问题的办法是，将<code>setCurrentKey</code>的调用放在自定义<code>load</code>方法的成功回调中：<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E5%B1%95%E5%BC%80%E6%8C%87%E5%AE%9A%E8%8A%82%E7%82%B93.png" alt="展开指定节点3"><br>这样就可以保证节点数据已经加载完成了，再去设置当前选中的节点</p>
+<p>还存在一个问题是，我们不仅要展开需要默认展开的节点，还要给当前正在操作的节点赋值，即全路径中最后一个<code>id</code>所对应的节点。<code>&lt;el-tree/&gt;</code>组件提供了<code>setCurrentKey</code>方法，即根据传入的<code>key</code>,将该<code>key</code>所对应的节点设置为选中状态，我们刚好可以利用这个方法。但由于每一节点的数据是异步请求而来的，所以如果将该方法的调用放在上图的方法中，可能会造成节点数据还没加载好，就给组件设置了当前选中的节点，导致设置不成功</p>
+<p>解决这个问题的办法是，将<code>setCurrentKey</code>的调用放在自定义<code>load</code>方法的成功回调中：<br><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E5%B1%95%E5%BC%80%E6%8C%87%E5%AE%9A%E8%8A%82%E7%82%B92.png" alt="展开指定节点2"></p>
+<p><img src="/2020/05/16/tech/vue/vue-element-tree-lazy-load/%E5%B1%95%E5%BC%80%E6%8C%87%E5%AE%9A%E8%8A%82%E7%82%B93.png" alt="展开指定节点3"><br>这样就可以保证节点数据已经加载完成了，再去设置当前选中的节点</p>
 <hr>
 <ul>
 <li>补充：<code>&lt;el-tree/&gt;</code>组件的全选/半选问题</li>
@@ -202,6 +203,13 @@
         
       </a>
     
+    
+      <a class="nav-right" href="/2020/06/03/tech/javaScript/js-fighting-1/">
+        
+          JavaScript 原生进阶学习-上
+        
+        <span class="nav-arrow"> →</span>
+      </a>
     
   </div>
 

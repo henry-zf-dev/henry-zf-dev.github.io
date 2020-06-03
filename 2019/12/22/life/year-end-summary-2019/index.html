@@ -10,7 +10,7 @@
   
   <title>
     
-      Hello World | HenryV2进阶中…
+      2019年终总结 | HenryV2进阶中…
     
   </title>
   <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -129,8 +129,8 @@
 </header>
 
     <div id="article-banner">
-  <h2>Hello World</h2>
-  <p class="post-date">2020-02-01</p>
+  <h2>2019年终总结</h2>
+  <p class="post-date">2019-12-22</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
   </div>
@@ -138,21 +138,25 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+    <section class="markdown-content"><h4 id="工作"><a href="#工作" class="headerlink" title="工作"></a>工作</h4><h5 id="华大demo"><a href="#华大demo" class="headerlink" title="华大demo"></a>华大demo</h5><p>初步认识音视频相关设备监与控的基本特性，ezmanager-web 有了雏形，技术上学习了websocket的基本使用，结果上完成了自己负责部分的工作任务，没有掉链子</p>
+<h5 id="华为会议室demo"><a href="#华为会议室demo" class="headerlink" title="华为会议室demo"></a>华为会议室demo</h5><p>通过现场调试，对音视频设备在会议室场景的应用有了更直观的了解，跑现场累归累，但确实是理解业务场景最直接的方式，同时自己也有机会接触更多的音视频设备。技术上，开始接触Vuex，学会了基本的使用方法，并配合ws实现对设备状态推送的全局状态管理（用法还不成熟，待完善）。这个阶段开始尝试以有经验的开发者，带新人配合完成工作，也是最能发现自我不足的一段时间，外部环境逼迫自己有目的性的查漏补缺，自我感觉有所进步。</p>
+<h5 id="OPPO项目"><a href="#OPPO项目" class="headerlink" title="OPPO项目"></a>OPPO项目</h5><p>开始从项目开发到产品开发的思维转化，在原有基础上，重构了ezmanager-web 框架，把能抽离的功能模块化：ws完善心跳机制、Vuex优化了数据存储方式、前端权限管理、设备控制超时统一机制、接口封装与错误处理优化；前端组件化也逐渐完善：导航栏、面包屑、table/filter组件、样式文件的规范、路由管理。开发过程中会更加注意代码的可重用和可维护性，会考虑更全面的业务场景，提高健壮性。项目前期自己投入时间相对较多，后面随着Ed的成长，让他承担了更多的工作，能够看到他的进步。但作为一个产品，ezmanager-web必然还存在很多的不足：由于功能迭代增加，路由管理变得混乱，需要重新梳理、设备监控代码的复用性非常低，需要配合设备库、总/分控讨论解决方案、页面响应式布局很弱，需要迭代性强化、浏览器兼容性（页面+js）还没有系统性进行测试、前端国际化还未开始、代码风格不统一，需要尽快统一（ESLint集成）……再者强调一下自己的一个不足点：由于后期将大部分工作都分配给了Ed，自己主要投入到设备库的开发，导致对自检、联检、告警相关业务不够属性，这必然还会对之后的开发和维护埋坑，需要补足。</p>
+<h5 id="设备库"><a href="#设备库" class="headerlink" title="设备库"></a>设备库</h5><p>设备库是自己第一个独立开发的基于meteor+Vue+mongodb的node项目。除开学习或者巩固到的技术知识点以外，我认为这个项目带给我的最大帮助是：我开始有了往全栈进阶的想法，也促使我去了解更多基于node的前后台开发技术，让我认识到自己现在掌握的东西是非常非常皮毛的东西，还有非常非常多的东西要去学习，去各个击破。前端：最基本的CSS/LESS/SASS、响应式布局、webpack打包机制、web相关必须掌握的HTTP技术点、web性能优化以及安全问题、基于Vue的SSR服务端渲染、前端自动测试……后台：关系型/非关系型数据库设计、node中间件技术、更好的node服务器开发框架、js设计模式……语言学习：typescript的基础用法以及对现有项目的改造或重构……这些都需要投入大量的时间去学习和实践。然后，话说回来，设备库的开发本身还有非常多的地方需要完善，就不一一列举了。（很感谢团队能给我机会来负责设备库的开发，我也会在nodeJs全栈的路上越走越自信）</p>
+<h5 id="项目以外"><a href="#项目以外" class="headerlink" title="项目以外"></a>项目以外</h5><p>19年下半年，我渐渐明确了自己未来三至五年的发展方向，就是在node全栈技术的道路上持续精进，抛开多余的想法，在完成分内工作的前提下，补足技术短板。我们的团队未来肯定会越来越大，不管以后自己能扮演什么样的角色，有一件事是不会变的：不断提升技术水平，为团队提供稳定可靠的技术支持，并从中获取满足感。（年会给自己立了个flag：三年之内在前端技术上超越Jerry，不想让他失望！）</p>
+<h4 id="生活"><a href="#生活" class="headerlink" title="生活"></a>生活</h4><p>慢慢学会品尝孤独。</p>
+<h4 id="2020年目标"><a href="#2020年目标" class="headerlink" title="2020年目标"></a>2020年目标</h4><p>至少在技术上得到自己的认可，并能正向地影响更多的人。</p>
+<p>…………</p>
 </section>
     <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Life" >
+    <span class="tag-code">Life</span>
+  </a>
+
+      </div>
     
     <!-- Tags END -->
     <!-- NAV START -->
@@ -160,17 +164,10 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/2019/12/22/life/year-end-summary-2019/">
-        <span class="nav-arrow">← </span>
-        
-          2019年终总结
-        
-      </a>
     
-    
-      <a class="nav-right" href="/2020/02/02/tech/frequently-git-command/">
+      <a class="nav-right" href="/2020/02/01/hello-world/">
         
-          常用 Git 命令
+          Hello World
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -195,7 +192,7 @@
   <div class="toc-main">
     <strong class="toc-title">Catalog</strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Quick-Start"><span class="toc-nav-text">Quick Start</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Create-a-new-post"><span class="toc-nav-text">Create a new post</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Run-server"><span class="toc-nav-text">Run server</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Generate-static-files"><span class="toc-nav-text">Generate static files</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Deploy-to-remote-sites"><span class="toc-nav-text">Deploy to remote sites</span></a></li></ol></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#工作"><span class="toc-nav-text">工作</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#华大demo"><span class="toc-nav-text">华大demo</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#华为会议室demo"><span class="toc-nav-text">华为会议室demo</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#OPPO项目"><span class="toc-nav-text">OPPO项目</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#设备库"><span class="toc-nav-text">设备库</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#项目以外"><span class="toc-nav-text">项目以外</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#生活"><span class="toc-nav-text">生活</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#2020年目标"><span class="toc-nav-text">2020年目标</span></a></li></ol>
     
   </div>
 </aside>
@@ -205,7 +202,7 @@
 
 <script>
   (function () {
-    var url = 'http://yoursite.com/2020/02/01/hello-world/';
+    var url = 'http://yoursite.com/2019/12/22/life/year-end-summary-2019/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
