@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="Henry&#39;s blog">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      二叉树的先中后序遍历（递归+非递归 JS 实现） | HenryV2进阶中…
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>HenryV2进阶中…</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">项目</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">项目</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>二叉树的先中后序遍历（递归+非递归 JS 实现）</h2>
+  <p class="post-date">2020-07-19</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>JavaScript 中没有树这种数据结构，但可以用 Object 和 Array 来构建树。二叉树是指，树中每个节点最多只能有两个子节点，分别为左节点、右节点，通常使用 Object 模拟二叉树。二叉树的先中后序遍历一般可以用递归来完成，也可以利用栈实现非递归的方式实现。</p>
+<p><strong>数据源：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> bt = &#123;</span><br><span class="line">  val: <span class="number">1</span>,</span><br><span class="line">  left: &#123;</span><br><span class="line">    val: <span class="number">2</span>,</span><br><span class="line">    left: &#123;</span><br><span class="line">      val: <span class="number">4</span>,</span><br><span class="line">      left: <span class="literal">null</span>,</span><br><span class="line">      right: <span class="literal">null</span></span><br><span class="line">    &#125;,</span><br><span class="line">    right: &#123;</span><br><span class="line">      val: <span class="number">5</span>,</span><br><span class="line">      left: <span class="literal">null</span>,</span><br><span class="line">      right: <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  right: &#123;</span><br><span class="line">    val: <span class="number">3</span>,</span><br><span class="line">    left: &#123;</span><br><span class="line">      val: <span class="number">6</span>,</span><br><span class="line">      left: <span class="literal">null</span>,</span><br><span class="line">      right: <span class="literal">null</span></span><br><span class="line">    &#125;,</span><br><span class="line">    right: &#123;</span><br><span class="line">      val: <span class="number">7</span>,</span><br><span class="line">      left: <span class="literal">null</span>,</span><br><span class="line">      right: <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/07/19/tech/dataStructuresAlgorithms/binary-tree-traversal/demoBinaryTree.png" alt="二叉树数据源"></p>
+<h5 id="先序遍历"><a href="#先序遍历" class="headerlink" title="先序遍历"></a>先序遍历</h5><blockquote>
+<p>根-左-右：先访问根节点，再对根节点的左子树进行先序遍历，最后对根节点的右子树进行先序遍历</p>
+</blockquote>
+<ul>
+<li>递归</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> preorder = <span class="function">(<span class="params">root</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!root) <span class="keyword">return</span>;</span><br><span class="line">  preorder(root.left);</span><br><span class="line">  preorder(root.right);</span><br><span class="line">&#125;;</span><br><span class="line">preorder(bt);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>非递归</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> preorder = <span class="function">(<span class="params">root</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!root) <span class="keyword">return</span>;</span><br><span class="line">  <span class="keyword">const</span> stack = [root];</span><br><span class="line">  <span class="keyword">while</span> (stack.length) &#123;</span><br><span class="line">    <span class="keyword">const</span> n = stack.pop();</span><br><span class="line">    <span class="built_in">console</span>.log(n.val);</span><br><span class="line">    <span class="comment">// 由于栈先进后出的特性，所有先 push right，再 push left</span></span><br><span class="line">    <span class="keyword">if</span> (n.right) stack.push(n.right);</span><br><span class="line">    <span class="keyword">if</span> (n.left) stack.push(n.left);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">preorder(bt);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>output: 1 2 4 5 3 6 7</p>
+</blockquote>
+<hr>
+<h5 id="中序遍历"><a href="#中序遍历" class="headerlink" title="中序遍历"></a>中序遍历</h5><blockquote>
+<p>左-根-右：先对根节点的左子树进行中序遍历，再访问根节点，最后对根节点的右子树中序遍历</p>
+</blockquote>
+<ul>
+<li>递归</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> inorder = <span class="function">(<span class="params">root</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!root) <span class="keyword">return</span>;</span><br><span class="line">  inorder(root.left);</span><br><span class="line">  <span class="built_in">console</span>.log(root.val);</span><br><span class="line">  inorder(root.right);</span><br><span class="line">&#125;;</span><br><span class="line">inorder(bt);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>非递归</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> inorder = <span class="function">(<span class="params">root</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!root) <span class="keyword">return</span>;</span><br><span class="line">  <span class="keyword">const</span> stack = [];</span><br><span class="line">  <span class="keyword">let</span> p = root;</span><br><span class="line">  <span class="keyword">while</span> (stack.length || p) &#123;</span><br><span class="line">    <span class="comment">// 类似于遍历链表，把当前根节点的所有左节点 push 到 stack 中</span></span><br><span class="line">    <span class="keyword">while</span> (p) &#123;</span><br><span class="line">      stack.push(p);</span><br><span class="line">      p = p.left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 访问最底层的左节点</span></span><br><span class="line">    <span class="keyword">const</span> n = stack.pop();</span><br><span class="line">    <span class="built_in">console</span>.log(n.val);</span><br><span class="line">    <span class="comment">// 然后将指针指向当前根节点的右节点，以该右节点作为根节点继续下轮的遍历</span></span><br><span class="line">    p = n.right;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">inorder(bt);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>output: 4 2 5 1 6 3 7</p>
+</blockquote>
+<hr>
+<h5 id="后序遍历"><a href="#后序遍历" class="headerlink" title="后序遍历"></a>后序遍历</h5><blockquote>
+<p>左-右-根：先对根节点的左子树进行后序遍历，再对根节点的右子树进行后序遍历，最后访问根节点</p>
+</blockquote>
+<ul>
+<li>递归</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> postorder = <span class="function">(<span class="params">root</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!root) <span class="keyword">return</span>;</span><br><span class="line">  postorder(root.left);</span><br><span class="line">  postorder(root.right);</span><br><span class="line">  <span class="built_in">console</span>.log(root.val);</span><br><span class="line">&#125;;</span><br><span class="line">postorder(bt);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>非递归</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先将后序遍历取反变为类似于先序遍历，即：左-右-根 =&gt; 根-右-左</span></span><br><span class="line"><span class="comment">// 再利用栈先进后出特性，把先序遍历的结果取反，遍历访问就是后序遍历的结果</span></span><br><span class="line"><span class="keyword">const</span> postorder = <span class="function">(<span class="params">root</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!root) <span class="keyword">return</span>;</span><br><span class="line">  <span class="keyword">const</span> outputStack = []; <span class="comment">// 最终用来倒序输出的栈</span></span><br><span class="line">  <span class="keyword">const</span> stack = [root]; <span class="comment">// 用来先序遍历的栈</span></span><br><span class="line">  <span class="keyword">while</span> (stack.length) &#123;</span><br><span class="line">    <span class="keyword">const</span> n = stack.pop();</span><br><span class="line">    <span class="comment">// 将 n push 到 outputStack 中</span></span><br><span class="line">    outputStack.push(n);</span><br><span class="line">    <span class="comment">// 因为和现需遍历不完全一样，先序遍历：根-左-右，此时为：根-右-左</span></span><br><span class="line">    <span class="comment">// 所以此时先 push left，再 push right</span></span><br><span class="line">    <span class="keyword">if</span> (n.left) stack.push(n.left);</span><br><span class="line">    <span class="keyword">if</span> (n.right) stack.push(n.right);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 最终遍历 pop outputStack 的所有元素输出，即为后序遍历的结果</span></span><br><span class="line">  <span class="keyword">while</span> (outputStack.length) &#123;</span><br><span class="line">    <span class="keyword">const</span> n = outputStack.pop();</span><br><span class="line">    <span class="built_in">console</span>.log(n.val);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">postorder(bt);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>output: 4 5 2 6 7 3 1</p>
+</blockquote>
+<hr>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#数据结构与算法" >
+    <span class="tag-code">数据结构与算法</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2020/06/10/tech/javaScript/js-fighting-1/">
+        <span class="nav-arrow">← </span>
+        
+          JavaScript 原生进阶学习-上
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#先序遍历"><span class="toc-nav-text">先序遍历</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#中序遍历"><span class="toc-nav-text">中序遍历</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#后序遍历"><span class="toc-nav-text">后序遍历</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://yoursite.com/2020/07/19/tech/dataStructuresAlgorithms/binary-tree-traversal/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng" target="_blank" rel="noopener">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
